@@ -18,5 +18,5 @@ for ip in $(cat ../../nmap_host-discovery|grep 'scan report'|awk '{print $5}');d
 mkdir all_targets && cd all_targets
 for ip in $(ls ../nmap*|awk -F '_' '{print $3}');do mkdir $ip && cp ../nmap_sCV_$ip $ip;done
 
-# Organize notes and clean up
+# Clean up
 cd ../ && mv all_targets ../../../ && cd ../../../ && rm -rf step1_host-discovery
