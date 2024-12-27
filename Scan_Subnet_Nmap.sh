@@ -20,3 +20,6 @@ for ip in $(ls ../nmap*|awk -F '_' '{print $3}');do mkdir $ip && cp ../nmap_sCV_
 
 # Clean up
 cd ../ && mv all_targets ../../../ && cd ../../../ && rm -rf step1_host-discovery
+
+# Create files in each target IP
+for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
