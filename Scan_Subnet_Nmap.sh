@@ -2,7 +2,7 @@
 # Created this script to automate and organize nmap subnet scanning
 # If concerned about causing disruptions on a target, then remove --min-rate=5000 
 
-# nmap Host Discovery 
+# nmap host discovery 
 mkdir step1_host-discovery && cd step1_host-discovery
 nmap -sn 10.13.38.0/24 --min-rate=5000 -oN nmap_host-discovery
 
