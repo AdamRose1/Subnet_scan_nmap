@@ -45,7 +45,7 @@ $sudo nmap $host_discovery $target $speed $protocol -oN nmap_host-discovery
 
 # nmap scan all 65k ports on every host discovered in the previous command
 mkdir step2_65k-find-open-ports && cd step2_65k-find-open-ports
-for ip in $(cat ../nmap_host-discovery|grep 'scan report'|grep -v 'closed' |awk '{print $5}');do $sudo nmap -Pn -p- $ip $speed $protocol -oN nmap_65k-ports_$ip;done
+for ip in $(cat ../nmap_host-discovery|grep 'scan report' |awk '{print $5}');do $sudo nmap -Pn -p- $ip $speed $protocol -oN nmap_65k-ports_$ip;done
 
 # nmap version and script scanning on every open port for each host discovered
 mkdir step3_sCV && cd step3_sCV
