@@ -2,37 +2,37 @@
 # Created this script to automate and organize nmap subnet scanning
 
 # Get user input for the target subnet/IP
-echo "What is the target subnet/IP address that you want to scan?"
+printf "What is the target subnet/IP address that you want to scan? "
 read target
-echo "Scan will run on $target"
+printf "Scan will run on $target \n\n"
 
 # Get user input for speed option
-echo "Do you want to add --min-rate=5000 to the nmap scans? (y/n)
-If you are concerned about causing disruptions on a target, then do not use --min-rate=5000"
+printf "Do you want to add --min-rate=5000 to the nmap scans? (y/n)
+If you are concerned about causing disruptions on a target, then do not use --min-rate=5000. "
 read speed
-speed=$(echo "$speed" | tr '[:upper:]' '[:lower:]')
+speed=$(printf "$speed" | tr '[:upper:]' '[:lower:]')
 
 # Check if the user wants to use --min-rate=5000
 if [[ "$speed" == "y" || "$speed" == "yes" ]]; then
     speed="--min-rate=5000"
-    echo "nmap will scan with --min-rate=5000"
+    printf "Nmap will scan with --min-rate=5000\n\n"
 else
     speed=""
-    echo "nmap will use default speed scan, it will not add --min-rate=5000"
+    printf "Nmap will use default speed scan, it will not add --min-rate=5000\n\n"
 fi
 
 # Get user input for protocol option
-echo "Do you want to scan UDP or TCP?"
+printf "Do you want to scan UDP or TCP? "
 read protocol
-protocol=$(echo "$protocol" | tr '[:upper:]' '[:lower:]')
+protocol=$(printf "$protocol" | tr '[:upper:]' '[:lower:]')
 
 # Check what protocol user wants to use
 if [[ "$protocol" == "udp" || "$protocol" == "u" ]]; then
     protocol= "-sU"
-    echo "Starting UDP scan"
+    printf "Starting UDP scan\n\n"
 else:
     protocol= ""
-    echo "Starting TCP scan"
+    printf "Starting TCP scan\n\n"
 fi
 
 # nmap host discovery 
