@@ -37,15 +37,15 @@ fi
 
 # nmap host discovery 
 mkdir step1_host-discovery && cd step1_host-discovery
-nmap -sn $target $speed -oN nmap_host-discovery 
+nmap -sn $target $speed $protocol -oN nmap_host-discovery 
 
 # nmap scan all 65k ports on every host discovered in the previous command
 mkdir step2_65k-find-open-ports && cd step2_65k-find-open-ports
-for ip in $(cat ../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do nmap -Pn -p- $ip $speed -oN nmap_65k-ports_$ip;done
+for ip in $(cat ../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do nmap -Pn -p- $ip $speed $protocol -oN nmap_65k-ports_$ip;done
 
 # nmap version and script scanning on every open port for each host discovered
 mkdir step3_sCV && cd step3_sCV
-for ip in $(cat ../../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do for ports in $(cat ../nmap_65k-ports_$ip|grep open|awk -F '/' '{print $1}'|sed -z 's/\n/,/g'|sed 's/,$//');do nmap -Pn $ip $speed -p $ports -sCV -oN nmap_sCV_$ip;done;done
+for ip in $(cat ../../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do for ports in $(cat ../nmap_65k-ports_$ip|grep open|awk -F '/' '{print $1}'|sed -z 's/\n/,/g'|sed 's/,$//');do nmap -Pn $ip $speed $protocol -p $ports -sCV -oN nmap_sCV_$ip;done;done
 
 # Create a directory for each host discovered with open ports, and then move each nmap file output to the target directory.  This is helpful for organizing notes on large subnets
 mkdir all_targets && cd all_targets
@@ -54,5 +54,5 @@ for ip in $(ls ../nmap*|awk -F '_' '{print $3}');do mkdir $ip && cp ../nmap_sCV_
 # Clean up
 cd ../ && mv all_targets ../../../ && cd ../../../ && rm -rf step1_host-discovery
 
-# If you do not want to create the below files in each target IP then comment out the line below
+# To create files in each target IP uncomment the line below
 for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
