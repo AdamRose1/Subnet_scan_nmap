@@ -54,5 +54,5 @@ for ip in $(ls ../nmap*|awk -F '_' '{print $3}');do mkdir $ip && cp ../nmap_sCV_
 # Clean up
 cd ../ && mv all_targets ../../../ && cd ../../../ && rm -rf step1_host-discovery
 
-# To create files in each target IP uncomment the line below
+# If you do not want to create the below files in each target IP then comment out the line below
 for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
