@@ -4,6 +4,7 @@
 # Get user input for the target subnet/IP
 echo "What is the target subnet/IP address that you want to scan?"
 read target
+echo "Scan will run on $target"
 
 # Get user input for speed option
 echo "Do you want to add --min-rate=5000 to the nmap scans? (y/n)
@@ -18,6 +19,20 @@ if [[ "$speed" == "y" || "$speed" == "yes" ]]; then
 else
     speed=""
     echo "nmap will use default speed scan, it will not add --min-rate=5000"
+fi
+
+# Get user input for protocol option
+echo "Do you want to scan UDP or TCP?"
+read protocol
+protocol=$(echo "$protocol" | tr '[:upper:]' '[:lower:]')
+
+# Check what protocol user wants to use
+if [[ "$protocol" == "udp" || "$protocol" == "u" ]]; then
+    protocol= "-sU"
+    echo "Starting UDP scan"
+else:
+    protocol= ""
+    echo "Starting TCP scan"
 fi
 
 # nmap host discovery 
@@ -40,4 +55,4 @@ for ip in $(ls ../nmap*|awk -F '_' '{print $3}');do mkdir $ip && cp ../nmap_sCV_
 cd ../ && mv all_targets ../../../ && cd ../../../ && rm -rf step1_host-discovery
 
 # To create files in each target IP uncomment the line below
-#for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
+for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
