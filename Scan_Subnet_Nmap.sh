@@ -30,7 +30,7 @@ for ip in $(cat ../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do n
 
 # nmap version and script scanning on every open port for each host discovered
 mkdir step3_sCV && cd step3_sCV
-for ip in $(cat ../../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do for ports in $(cat ../nmap_65k-ports_$ip|grep open|awk -F '/' '{print $1}'|sed -z 's/\n/,/g'|sed 's/,$//');do nmap -Pn $ip -p $ports -sCV -oN nmap_sCV_$ip;done;done
+for ip in $(cat ../../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do for ports in $(cat ../nmap_65k-ports_$ip|grep open|awk -F '/' '{print $1}'|sed -z 's/\n/,/g'|sed 's/,$//');do nmap -Pn $ip $speed -p $ports -sCV -oN nmap_sCV_$ip;done;done
 
 # Create a directory for each host discovered with open ports, and then move each nmap file output to the target directory.  This is helpful for organizing notes on large subnets
 mkdir all_targets && cd all_targets
