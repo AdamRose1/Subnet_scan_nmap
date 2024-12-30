@@ -28,16 +28,20 @@ protocol=$(printf "$protocol" | tr '[:upper:]' '[:lower:]')
 
 # Check what protocol user wants to use
 if [[ "$protocol" == "udp" || "$protocol" == "u" ]]; then
-    protocol= "-sU"
+    protocol="-sU"
+    sudo="sudo"
+    host_discovery="" # no -sn
     printf "Starting UDP scan\n\n"
-else:
-    protocol= ""
+else
+    protocol=""
+    host_discovery="-sn"
+    sudo=""
     printf "Starting TCP scan\n\n"
 fi
 
 # nmap host discovery 
 mkdir step1_host-discovery && cd step1_host-discovery
-nmap -sn $target $speed $protocol -oN nmap_host-discovery 
+$sudo nmap $host_discovery $target $speed $protocol -oN nmap_host-discovery 
 
 # nmap scan all 65k ports on every host discovered in the previous command
 mkdir step2_65k-find-open-ports && cd step2_65k-find-open-ports
