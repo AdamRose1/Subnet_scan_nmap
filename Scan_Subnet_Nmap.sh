@@ -4,7 +4,7 @@
 
 # nmap host discovery 
 mkdir step1_host-discovery && cd step1_host-discovery
-nmap -sn 10.13.38.0/24 --min-rate=5000 -oN nmap_host-discovery
+nmap -sn 10.13.38.0/24 --min-rate=5000 -oN nmap_host-discovery # Replace Target IP Subnet here
 
 # nmap scan all 65k ports on every host discovered in the previous command
 mkdir step2_65k-find-open-ports && cd step2_65k-find-open-ports
