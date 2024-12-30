@@ -1,14 +1,32 @@
 #!/bin/bash
 # Created this script to automate and organize nmap subnet scanning
-# If concerned about causing disruptions on a target, then remove --min-rate=5000 
+
+# Get user input for the target subnet/IP
+echo "What is the target subnet/IP address that you want to scan?"
+read target
+
+# Get user input for speed option
+echo "Do you want to add --min-rate=5000 to the nmap scans? (y/n)
+If you are concerned about causing disruptions on a target, then do not use --min-rate=5000"
+read speed
+speed=$(echo "$speed" | tr '[:upper:]' '[:lower:]')
+
+# Check if the user wants to use --min-rate=5000
+if [[ "$speed" == "y" || "$speed" == "yes" ]]; then
+    speed="--min-rate=5000"
+    echo "nmap will scan with --min-rate=5000"
+else
+    speed=""
+    echo "nmap will use default speed scan, it will not add --min-rate=5000"
+fi
 
 # nmap host discovery 
 mkdir step1_host-discovery && cd step1_host-discovery
-nmap -sn 10.13.38.0/24 --min-rate=5000 -oN nmap_host-discovery # Replace Target IP Subnet here
+nmap -sn $target $speed -oN nmap_host-discovery 
 
 # nmap scan all 65k ports on every host discovered in the previous command
 mkdir step2_65k-find-open-ports && cd step2_65k-find-open-ports
-for ip in $(cat ../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do nmap -Pn -p- $ip --min-rate=5000 -oN nmap_65k-ports_$ip;done
+for ip in $(cat ../nmap_host-discovery|grep 'scan report'|awk '{print $5}');do nmap -Pn -p- $ip $speed -oN nmap_65k-ports_$ip;done
 
 # nmap version and script scanning on every open port for each host discovered
 mkdir step3_sCV && cd step3_sCV
@@ -21,5 +39,5 @@ for ip in $(ls ../nmap*|awk -F '_' '{print $3}');do mkdir $ip && cp ../nmap_sCV_
 # Clean up
 cd ../ && mv all_targets ../../../ && cd ../../../ && rm -rf step1_host-discovery
 
-# Create files in each target IP
-for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
+# To create files in each target IP uncomment the line below
+#for ip in $(ls all_targets);do touch all_targets/$ip/enumeration.txt all_targets/$ip/exploit_path.txt all_targets/$ip/creds.txt;done
